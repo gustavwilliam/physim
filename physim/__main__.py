@@ -6,7 +6,7 @@ from models.objects import Object
 from physim.models.canvas import Canvas
 
 GRAVITY = [0, 0.03]
-GROUND_HEIGHT = 3
+GROUND_HEIGHT = 2
 TERMINAL_SIZE = os.get_terminal_size()
 HEIGHT = TERMINAL_SIZE.lines - 1
 WIDTH = TERMINAL_SIZE.columns
@@ -33,7 +33,7 @@ obstacle = Object(
     width=30,
     height=4,
     friction_coeff=20,
-    position=[WIDTH - 50, HEIGHT - GROUND_HEIGHT - 5],
+    position=[WIDTH - 50, HEIGHT - GROUND_HEIGHT - 7],
     texture="▚",
 )
 

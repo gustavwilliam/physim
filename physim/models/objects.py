@@ -18,7 +18,7 @@ class Object:
         collisions: Optional[bool] = True,
         movable: Optional[bool] = False,
         user_input: Optional[bool] = False,
-        texture: Optional[str] = "█"
+        texture: Optional[str] = "█",
     ) -> None:
         self.name = name
         self.mass = mass
@@ -55,8 +55,8 @@ class Object:
         self.position[1] -= 1
 
     def move_sideways(self, direction: int) -> None:
-        if abs(self.velocity[0]) <= self.canvas.fps / 7:
-            self.velocity[0] += 1.5 * direction
+        if abs(self.velocity[0]) <= self.canvas.fps / 5:
+            self.velocity[0] += 1.1 * direction
         else:
             self.velocity[0] = (
                 self.velocity[0] / abs(self.velocity[0]) * self.canvas.fps / 10
