@@ -70,10 +70,15 @@ class Canvas:
         print("\n".join(["".join(row) for row in render_list]))
 
     def render_loop(self) -> None:
-        while self.running:
-            self.render()
-            self.update()
-            time.sleep(1 / self.fps)
+        try:
+            while self.running:
+                self.render()
+                self.update()
+                time.sleep(1 / self.fps)
+
+        except KeyboardInterrupt:  # Program exited by user
+            clear_screen()
+            quit()
 
         clear_screen()
 
