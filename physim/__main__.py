@@ -33,11 +33,25 @@ obstacle = Object(
     width=30,
     height=4,
     friction_coeff=20,
-    position=[WIDTH - 50, HEIGHT - GROUND_HEIGHT - 7],
+    position=[WIDTH - 50, HEIGHT - GROUND_HEIGHT - 8],
     texture="▚",
 )
+barrier_left = Object(
+    name="Barrier left",
+    width=5,
+    height=HEIGHT,
+    position=[-5, 0],
+    texture=" ",
+)
+barrier_right = Object(
+    name="Barrier right",
+    width=5,
+    height=HEIGHT,
+    position=[WIDTH, 0],
+    texture=" ",
+)
 
-canvas.add_objects(obstacle, ground, player)
+canvas.add_objects(obstacle, ground, barrier_left, barrier_right, player)
 listener = keyboard.Listener(on_press=canvas.handle_key_press)
 
 if __name__ == "__main__":
