@@ -85,9 +85,10 @@ class Object:
 
     def any_collision(self) -> Optional["Object"]:
         for object_ in self.canvas.objects:
-            if not object_.collisions or object_ == self:
+            if not object_.collisions:
                 return
-
+            elif object_ == self:
+                continue
             if self.check_collision(object_):
                 return object_
 
