@@ -27,7 +27,7 @@ class Canvas:
         self.running = running
 
     def __repr__(self) -> str:
-        return f"<Canvas: width={self.width}, height={self.height}, objects=[{', '.join(str(object_) for object_ in self.objects)}]>"
+        return f"<Canvas: width={self.width}, height={self.height}, fps={self.fps}, g={self.g}, running={self.running}, objects=[{', '.join(str(object_) for object_ in self.objects)}]>"
 
     def add_objects(self, *kwargs: List[Object]) -> None:
         self.objects.extend(kwargs)
