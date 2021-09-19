@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, List, Optional
+from decimal import Decimal
 
 if TYPE_CHECKING:
     from models.canvas import Canvas
@@ -33,6 +34,26 @@ class Object:
         self.movable = movable
         self.user_input = user_input
         self.texture = texture
+
+    @property
+    def center_pos(self) -> List[int]:
+        return [
+            (2 * self.position[0] + self.width) / 2,
+            (2 * self.position[1] + self.height) / 2,
+        ]
+
+    @property
+    def collision_lines(self) -> List[callable]:
+        return [
+            get_line(
+                self.position,
+                [self.position[0] + self.width, self.position[1] + self.height],
+            ),
+            get_line(
+                [self.position[0], self.position[1] + self.height],
+                [self.position[0] + self.width, self.position[1]],
+            ),
+        ]
 
     def __repr__(self) -> str:
         return f"<Object: name={self.name}, mass={self.mass}, velocity={self.velocity}, width={self.width}, height={self.height}, position={self.position}, friction_coeff={self.friction_coeff}, gravity={self.gravity}>"
@@ -70,6 +91,23 @@ class Object:
             if self.check_collision(object_):
                 return object_
 
+    def collision_side(self, other) -> str:
+        collision_lines = other.collision_lines
+        center_pos = self.center_pos
+
+        side = "".join(
+            [
+                str(int(collision_lines[0](center_pos[0]) < center_pos[1])),
+                str(int(collision_lines[1](center_pos[0]) < center_pos[1])),
+            ]
+        )
+        return {
+            "00": "D",
+            "01": "R",
+            "10": "L",
+            "11": "U",
+        }[side]
+
     def update(self) -> None:
         if not self.movable:
             return
@@ -81,8 +119,20 @@ class Object:
 
         if self.collisions:
             while object_ := self.any_collision():
-                self.velocity[0] *= 1 - object_.friction_coeff / self.canvas.fps
-                while self.check_collision(object_):  # Gravity
-                    self.velocity[1] = -1
+                collision_side = self.collision_side(object_)
+                side = 1 if collision_side in ["U", "D"] else 0
+
+                self.velocity[0 if side == 1 else 1] *= (
+                    1 - object_.friction_coeff / self.canvas.fps
+                )  # Friction
+
+                while self.check_collision(object_):  # Repel from collision objects
+                    self.velocity[side] = 1 if collision_side in ["U", "R"] else -1
                     self.position = [sum(i) for i in zip(self.position, self.velocity)]
-                    self.velocity[1] = 0
+                    self.velocity[side] = 0
+
+
+def get_line(point_1, point_2) -> callable:
+    m = float(Decimal((point_2[1] - point_1[1])) / Decimal(point_2[0] - point_1[0]))
+    c = point_2[1] - (m * point_2[0])
+    return lambda x: m * x + c
