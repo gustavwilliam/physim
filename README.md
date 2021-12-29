@@ -2,6 +2,8 @@
 
 A basic physics platformer simulation.
 
+![Physim demo](physim-demo.gif)
+
 ## Setup
 
 Clone the project.
